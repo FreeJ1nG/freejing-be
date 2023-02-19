@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
@@ -14,34 +13,31 @@ import (
 	"github.com/rs/cors"
 )
 
+func logRequestFunc(f http.HandlerFunc, log string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.Method, r.URL.Path)
+		f(w, r)
+	}
+}
+
 func setupRoutes(db *sql.DB) {
 	router := mux.NewRouter()
 
 	mainRouter := router.PathPrefix("/v1").Subrouter()
 
-	mainRouter.HandleFunc("/blogs", blog.CreatePostHandler(db)).Methods("POST")
-	mainRouter.HandleFunc("/blogs", blog.GetPostsHandler(db)).Methods("GET")
-	mainRouter.HandleFunc("/blogs/{id}", blog.GetPostByIdHandler(db)).Methods("GET")
-	mainRouter.HandleFunc("/blogs/{id}", blog.DeletePostHandler(db)).Methods("DELETE")
-	mainRouter.HandleFunc("/blogs/{id}", blog.UpdatePostHandler(db)).Methods("PATCH")
+	mainRouter.HandleFunc("/blogs",  logRequestFunc(blog.CreatePostHandler(db), "POST /v1/blogs")).Methods("POST")
+	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(db), "GET /v1/blogs")).Methods("GET")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(db), "GET /v1/blogs/{id}")).Methods("GET")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.DeletePostHandler(db), "DELETE /v1/blogs/{id}")).Methods("DELETE")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.UpdatePostHandler(db), "PATCH /v1/blogs/{id}")).Methods("PATCH")
 
 	server := &http.Server{
 		Addr: ":7070",
 		Handler: cors.AllowAll().Handler(router),
 	}
 
-	defer func() {
-		if err := server.Close(); err != nil {
-			log.Fatalf("error while closing server: %v", err)
-		}
-	}()
-
-	go func() {
-		if err := server.ListenAndServe(); err != http.ErrServerClosed {
-			log.Fatalf("listenAndServe error: %v", err)
-		}
-	}()
-
+	defer server.Close()
+	server.ListenAndServe()
 }
 
 func main() {
