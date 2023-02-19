@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/FreeJ1nG/ristek-oprec/blog"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
 )
@@ -27,9 +29,17 @@ func setupRoutes(db *sql.DB) {
 }
 
 func main() {
-	connStr := "postgres://freejing:@localhost:5432/portofolio?sslmode=require"
+	err := godotenv.Load(".env.local")
+	if err != nil {
+		panic(err)
+	}
 
-	db, err := sql.Open("postgres", connStr)
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+
+	db, err := sql.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=portofolio sslmode=disable", dbHost, dbPort, dbUser, dbPass))
 	if err != nil {
 		panic(err)
 	}
