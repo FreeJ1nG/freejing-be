@@ -20,7 +20,7 @@ type Response struct {
 	Data       interface{} `json:"data,omitempty"`
 	StatusCode int         `json:"statusCode"`
 	Success    bool        `json:"success"`
-	Error      string      `json:"errors"`
+	Error      string      `json:"errors,omitempty"`
 }
 
 type Post struct {
