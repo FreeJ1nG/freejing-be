@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/FreeJ1nG/ristek-oprec/blog"
-	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	_ "github.com/lib/pq"
 	"github.com/rs/cors"
 )
 
@@ -23,23 +23,18 @@ func setupRoutes(db *sql.DB) {
 	mainRouter.HandleFunc("/blogs/{id}", blog.DeletePostHandler(db)).Methods("DELETE")
 	mainRouter.HandleFunc("/blogs/{id}", blog.UpdatePostHandler(db)).Methods("PATCH")
 
-	log.Fatal(http.ListenAndServe(":8080", cors.AllowAll().Handler(router)))
+	log.Fatal(http.ListenAndServe(":8081", cors.AllowAll().Handler(router)))
 }
 
 func main() {
-	cfg := mysql.Config{
-		User:   "root",
-		Passwd: "",
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "ristek_oprec",
-	}
+	connStr := "postgres://freejing:@localhost:5432/portofolio?sslmode=require"
 
-	db, err := sql.Open("mysql", cfg.FormatDSN())
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		fmt.Println("Backend was not able to connect to database")
+		panic(err)
 	}
+	defer db.Close()
 
-	fmt.Println("Ristek Oprec App v0.01")
+	fmt.Println("Portofolio App v0.01")
 	setupRoutes(db)
 }
