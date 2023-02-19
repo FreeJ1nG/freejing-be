@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/FreeJ1nG/ristek-oprec/blog"
+	"github.com/FreeJ1nG/freejing-be/blog"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -25,7 +25,7 @@ func setupRoutes(db *sql.DB) {
 	mainRouter.HandleFunc("/blogs/{id}", blog.DeletePostHandler(db)).Methods("DELETE")
 	mainRouter.HandleFunc("/blogs/{id}", blog.UpdatePostHandler(db)).Methods("PATCH")
 
-	log.Fatal(http.ListenAndServe(":8081", cors.AllowAll().Handler(router)))
+	log.Fatal(http.ListenAndServe(":7070", cors.AllowAll().Handler(router)))
 }
 
 func main() {
@@ -44,6 +44,12 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+
+	result, err := db.Exec("SELECT * FROM blog")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(result)
 
 	fmt.Println("Portofolio App v0.01")
 	setupRoutes(db)

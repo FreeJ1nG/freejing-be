@@ -1,5 +1,5 @@
-module github.com/FreeJ1nG/ristek-oprec/blog
+module github.com/FreeJ1nG/freejing-be/blog
 
-go 1.20
+go 1.19
 
 require github.com/google/uuid v1.3.0
