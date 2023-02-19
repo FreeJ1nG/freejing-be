@@ -25,7 +25,23 @@ func setupRoutes(db *sql.DB) {
 	mainRouter.HandleFunc("/blogs/{id}", blog.DeletePostHandler(db)).Methods("DELETE")
 	mainRouter.HandleFunc("/blogs/{id}", blog.UpdatePostHandler(db)).Methods("PATCH")
 
-	log.Fatal(http.ListenAndServe(":7070", cors.AllowAll().Handler(router)))
+	server := &http.Server{
+		Addr: ":7070",
+		Handler: cors.AllowAll().Handler(router),
+	}
+
+	defer func() {
+		if err := server.Close(); err != nil {
+			log.Fatalf("error while closing server: %v", err)
+		}
+	}()
+
+	go func() {
+		if err := server.ListenAndServe(); err != http.ErrServerClosed {
+			log.Fatalf("listenAndServe error: %v", err)
+		}
+	}()
+
 }
 
 func main() {
@@ -42,15 +58,9 @@ func main() {
 
 	db, err := sql.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbPass, dbName))
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	defer db.Close()
-
-	result, err := db.Exec("SELECT * FROM blog")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(result)
 
 	fmt.Println("Portofolio App v0.01")
 	setupRoutes(db)
