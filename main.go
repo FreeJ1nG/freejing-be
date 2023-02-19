@@ -38,8 +38,9 @@ func main() {
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
+	dbName := os.Getenv("DB_NAME")
 
-	db, err := sql.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=portofolio sslmode=disable", dbHost, dbPort, dbUser, dbPass))
+	db, err := sql.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbPass, dbName))
 	if err != nil {
 		panic(err)
 	}
