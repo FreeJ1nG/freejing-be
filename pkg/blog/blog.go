@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/FreeJ1nG.com/freejing-be/httpm"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
@@ -33,38 +34,6 @@ type Post struct {
 func getUuid() string {
 	id := uuid.New()
 	return id.String()
-}
-
-func makeErrorResponse(w http.ResponseWriter, httpStatus int, err error) []byte {
-	w.WriteHeader(httpStatus)
-	response := Response{Data: nil, StatusCode: httpStatus, Success: false, Error: err.Error()}
-
-	json, _ := json.Marshal(response)
-
-	return json
-}
-
-func makeSuccessResponse(w http.ResponseWriter, httpStatus int, data interface{}) []byte {
-	var response Response
-	switch v := data.(type) {
-	case Post:
-		w.WriteHeader(httpStatus)
-		response = Response{Data: v, StatusCode: httpStatus, Success: true}
-	case []Post:
-		w.WriteHeader(httpStatus)
-		if len(v) == 0 {
-			response = Response{Data: []Post{}, StatusCode: httpStatus, Success: true}
-		} else {
-			response = Response{Data: v, StatusCode: httpStatus, Success: true}
-		}
-	default:
-		w.WriteHeader(http.StatusInternalServerError)
-		response = Response{Data: v, StatusCode: http.StatusInternalServerError, Success: false, Error: "invalid data type"}
-	}
-
-	json, _ := json.Marshal(response)
-
-	return json
 }
 
 func getPostById(db *sql.DB, id string) (Post, error) {
@@ -159,26 +128,26 @@ func CreatePostHandler(db *sql.DB) http.HandlerFunc {
 		var requestBody RequestBody
 		err := json.NewDecoder(r.Body).Decode(&requestBody)
 		if err != nil {
-			w.Write(makeErrorResponse(w, http.StatusInternalServerError, err))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return
 		}
 
 		if requestBody.Title == "" {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("title is missing from request body")))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("title is missing from request body")))
 			return
 		}
 		if requestBody.Content == "" {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("content is missing from request body")))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("content is missing from request body")))
 			return
 		}
 
 		post, err := createPost(db, requestBody.Title, requestBody.Content)
 		if err != nil {
-			w.Write(makeErrorResponse(w, http.StatusInternalServerError, err))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return
 		}
 
-		w.Write(makeSuccessResponse(w, http.StatusCreated, post))
+		w.Write(httpm.MakeSuccessResponse[Post](w, http.StatusCreated, post))
 	}
 }
 
@@ -188,17 +157,17 @@ func DeletePostHandler(db *sql.DB) http.HandlerFunc {
 		id := vars["id"]
 
 		if id == "" {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("no post id present in url parameter")))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("no post id present in url parameter")))
 			return
 		}
 
 		err := deletePostById(db, id)
 		if err != nil {
-			w.Write(makeErrorResponse(w, http.StatusInternalServerError, err))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return
 		}
 
-		w.Write(makeSuccessResponse(w, http.StatusNoContent, nil))
+		w.Write(httpm.MakeSuccessResponse[interface{}](w, http.StatusNoContent, nil))
 	}
 }
 
@@ -208,33 +177,33 @@ func UpdatePostHandler(db *sql.DB) http.HandlerFunc {
 		id := vars["id"]
 
 		if id == "" {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("no post id present in url parameter")))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("no post id present in url parameter")))
 			return
 		}
 
 		var requestBody RequestBody
 		err := json.NewDecoder(r.Body).Decode(&requestBody)
 		if err != nil {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, err))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, err))
 			return
 		}
 
 		if requestBody.Title == "" {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("title is missing from request body")))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("title is missing from request body")))
 			return
 		}
 		if requestBody.Content == "" {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("content is missing from request body")))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("content is missing from request body")))
 			return
 		}
 
 		post, err := updatePost(db, id, requestBody.Title, requestBody.Content)
 		if err != nil {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, err))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, err))
 			return
 		}
 
-		w.Write(makeSuccessResponse(w, http.StatusOK, post))
+		w.Write(httpm.MakeSuccessResponse[Post](w, http.StatusOK, post))
 	}
 }
 
@@ -244,28 +213,28 @@ func GetPostByIdHandler(db *sql.DB) http.HandlerFunc {
 		id := vars["id"]
 
 		if id == "" {
-			w.Write(makeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("no post id present in request")))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, fmt.Errorf("no post id present in request")))
 			return
 		}
 
 		post, err := getPostById(db, id)
 		if err != nil {
-			w.Write(makeErrorResponse(w, http.StatusInternalServerError, err))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return
 		}
 
-		w.Write(makeSuccessResponse(w, http.StatusOK, post))
+		w.Write(httpm.MakeSuccessResponse[Post](w, http.StatusOK, post))
 	}
 }
 
 func GetPostsHandler(db *sql.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
 		posts, err := getAllPosts(db)
 		if err != nil {
-			w.Write(makeErrorResponse(w, http.StatusInternalServerError, err))
+			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return
 		}
 
-		w.Write(makeSuccessResponse(w, http.StatusOK, posts))
+		w.Write(httpm.MakeSuccessResponse[Post](w, http.StatusOK, posts))
 	}
 }
