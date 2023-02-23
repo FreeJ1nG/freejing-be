@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/FreeJ1nG.com/freejing-be/websocket"
 	"github.com/FreeJ1nG/freejing-be/blog"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -21,18 +22,23 @@ func logRequestFunc(f http.HandlerFunc, log string) http.HandlerFunc {
 }
 
 func setupRoutes(db *sql.DB) {
+	pool := websocket.NewPool()
+	go pool.Start(db)
+
 	router := mux.NewRouter()
 
 	mainRouter := router.PathPrefix("/v1").Subrouter()
 
-	mainRouter.HandleFunc("/blogs",  logRequestFunc(blog.CreatePostHandler(db), "POST /v1/blogs")).Methods("POST")
+	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(db), "POST /v1/blogs")).Methods("POST")
 	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(db), "GET /v1/blogs")).Methods("GET")
 	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(db), "GET /v1/blogs/{id}")).Methods("GET")
 	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.DeletePostHandler(db), "DELETE /v1/blogs/{id}")).Methods("DELETE")
 	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.UpdatePostHandler(db), "PATCH /v1/blogs/{id}")).Methods("PATCH")
 
+	mainRouter.HandleFunc("/ws", logRequestFunc(websocket.WebsocketHandler(db, pool), "WEBSOCKET /v1/ws"))
+
 	server := &http.Server{
-		Addr: ":7070",
+		Addr:    ":7070",
 		Handler: cors.AllowAll().Handler(router),
 	}
 
@@ -58,6 +64,6 @@ func main() {
 	}
 	defer db.Close()
 
-	fmt.Println("Portofolio App v0.01")
+	fmt.Println("Portofolio App v0.02")
 	setupRoutes(db)
 }

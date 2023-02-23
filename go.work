@@ -5,4 +5,5 @@ use (
 	./pkg/auth
 	./pkg/blog
 	./pkg/httpm
+	./pkg/websocket
 )
