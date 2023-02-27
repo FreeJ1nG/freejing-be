@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -22,6 +23,7 @@ func logRequestFunc(f http.HandlerFunc, log string) http.HandlerFunc {
 }
 
 func setupRoutes(db *sql.DB) {
+	ctx := context.Background()
 	pool := websocket.NewPool()
 	go pool.Start(db)
 
@@ -29,13 +31,13 @@ func setupRoutes(db *sql.DB) {
 
 	mainRouter := router.PathPrefix("/v1").Subrouter()
 
-	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(db), "POST /v1/blogs")).Methods("POST")
-	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(db), "GET /v1/blogs")).Methods("GET")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(db), "GET /v1/blogs/{id}")).Methods("GET")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.DeletePostHandler(db), "DELETE /v1/blogs/{id}")).Methods("DELETE")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.UpdatePostHandler(db), "PATCH /v1/blogs/{id}")).Methods("PATCH")
+	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(ctx), "POST /v1/blogs")).Methods("POST")
+	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(ctx), "GET /v1/blogs")).Methods("GET")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(ctx), "GET /v1/blogs/{id}")).Methods("GET")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.DeletePostHandler(ctx), "DELETE /v1/blogs/{id}")).Methods("DELETE")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.UpdatePostHandler(ctx), "PATCH /v1/blogs/{id}")).Methods("PATCH")
 
-	mainRouter.HandleFunc("/ws", logRequestFunc(websocket.WebsocketHandler(db, pool), "WEBSOCKET /v1/ws"))
+	mainRouter.HandleFunc("/ws", logRequestFunc(websocket.WebsocketHandler(ctx, pool), "WEBSOCKET /v1/ws"))
 
 	server := &http.Server{
 		Addr:    ":7070",

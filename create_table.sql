@@ -4,7 +4,7 @@ CREATE TABLE blogs (
   id VARCHAR(255) NOT NULL,
   title VARCHAR(255) NOT NULL,
   content VARCHAR(10000) NOT NULL,
-  create_date VARCHAR(255) NOT NULL,
+  create_date DATE NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -24,11 +24,11 @@ CREATE TABLE chat_history (
   id VARCHAR(255) NOT NULL,
   sender VARCHAR(255) NOT NULL,
   message VARCHAR(255) NOT NULL,
-  create_date VARCHAR(255) NOT NULL,
+  create_date DATE NOT NULL,
   PRIMARY KEY (id)
 );
 
 /*
 to load to database:
-psql -h localhost -U freejing -d portofolio -f ~/p/freejing-be/create_table.psql
+psql -h localhost -U freejing -d portofolio -f ~/p/freejing-be/create_table.sql
 */
