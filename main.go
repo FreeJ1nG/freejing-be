@@ -16,7 +16,7 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
-	swaggerFiles "github.com/swaggo/files"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func logRequestFunc(f http.HandlerFunc) http.HandlerFunc {
@@ -36,7 +36,7 @@ func setupRoutes(db *sql.DB) {
 
 	mainRouter := router.PathPrefix("/v1").Subrouter()
 
-	mainRouter.HandleFunc("/docs", logRequestFunc(swaggerFiles.Handler.ServeHTTP))
+	mainRouter.PathPrefix("/docs/").Handler(logRequestFunc(httpSwagger.WrapHandler))
 
 	// @Summary add new blog
 	// @ID post-new-blog
