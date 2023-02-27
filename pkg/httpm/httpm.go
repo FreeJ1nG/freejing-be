@@ -34,6 +34,9 @@ func MakeSuccessResponse[T any](w http.ResponseWriter, httpStatus int, data inte
 		} else {
 			response = Response{Data: v, StatusCode: httpStatus, Success: true}
 		}
+	case nil:
+		w.WriteHeader(httpStatus)
+		response = Response{Data: nil, StatusCode: httpStatus, Success: true}
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
 		response = Response{Data: v, StatusCode: http.StatusInternalServerError, Success: false, Error: "invalid data type"}
