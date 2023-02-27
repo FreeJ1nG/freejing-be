@@ -11,10 +11,12 @@ import (
 	"github.com/FreeJ1nG.com/freejing-be/websocket"
 	"github.com/FreeJ1nG/freejing-be/blog"
 	"github.com/FreeJ1nG/freejing-be/dbquery"
+	_ "github.com/FreeJ1nG/freejing-be/docs"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
+	swaggerFiles "github.com/swaggo/files"
 )
 
 func logRequestFunc(f http.HandlerFunc) http.HandlerFunc {
@@ -34,6 +36,12 @@ func setupRoutes(db *sql.DB) {
 
 	mainRouter := router.PathPrefix("/v1").Subrouter()
 
+	mainRouter.HandleFunc("/docs", logRequestFunc(swaggerFiles.Handler.ServeHTTP))
+
+	// @Summary add new blog
+	// @ID post-new-blog
+	// @Produce json
+	// @Router /blogs [post]
 	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(queries, ctx))).Methods("POST")
 	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(queries, ctx))).Methods("GET")
 	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(queries, ctx))).Methods("GET")
@@ -55,6 +63,16 @@ func setupRoutes(db *sql.DB) {
 	defer server.Close()
 	server.ListenAndServe()
 }
+
+// @title FreeJinG API
+// @version 1.0
+// @description This API is a self-made project made with golang, this repository can be accessed on: https://github.com/FreeJ1nG/freejing-be
+
+// @contact.name Andrew Jeremy
+// @contact.email Andrewjeremy12345@gmail.com
+
+// @host api.freejing.com
+// @BasePath /v1
 
 func main() {
 	err := godotenv.Load(".env.local")
