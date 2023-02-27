@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/FreeJ1nG.com/freejing-be/auth"
 	"github.com/FreeJ1nG.com/freejing-be/websocket"
 	"github.com/FreeJ1nG/freejing-be/blog"
 	"github.com/FreeJ1nG/freejing-be/dbquery"
@@ -16,7 +17,7 @@ import (
 	"github.com/rs/cors"
 )
 
-func logRequestFunc(f http.HandlerFunc, log string) http.HandlerFunc {
+func logRequestFunc(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.Method, r.URL.Path)
 		f(w, r)
@@ -33,13 +34,18 @@ func setupRoutes(db *sql.DB) {
 
 	mainRouter := router.PathPrefix("/v1").Subrouter()
 
-	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(queries, ctx), "POST /v1/blogs")).Methods("POST")
-	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(queries, ctx), "GET /v1/blogs")).Methods("GET")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(queries, ctx), "GET /v1/blogs/{id}")).Methods("GET")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.DeletePostHandler(queries, ctx), "DELETE /v1/blogs/{id}")).Methods("DELETE")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.UpdatePostHandler(queries, ctx), "PATCH /v1/blogs/{id}")).Methods("PATCH")
+	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(queries, ctx))).Methods("POST")
+	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(queries, ctx))).Methods("GET")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(queries, ctx))).Methods("GET")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.DeletePostHandler(queries, ctx))).Methods("DELETE")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.UpdatePostHandler(queries, ctx))).Methods("PATCH")
 
-	mainRouter.HandleFunc("/ws", logRequestFunc(websocket.WebsocketHandler(pool), "WEBSOCKET /v1/ws"))
+	mainRouter.HandleFunc("/auth/{username}", logRequestFunc(auth.GetUserHandler(queries, ctx))).Methods("GET")
+	mainRouter.HandleFunc("/auth", logRequestFunc(auth.CreateUserHandler(queries, ctx))).Methods("POST")
+	mainRouter.HandleFunc("/auth/{username}", logRequestFunc(auth.UpdateUserHandler(queries, ctx))).Methods("PATCH")
+	mainRouter.HandleFunc("/auth/{username}", logRequestFunc(auth.DeleteUserHandler(queries, ctx))).Methods("DELETE")
+
+	mainRouter.HandleFunc("/ws", logRequestFunc(websocket.WebsocketHandler(pool)))
 
 	server := &http.Server{
 		Addr:    ":7070",

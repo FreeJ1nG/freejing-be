@@ -62,6 +62,32 @@ func (q *Queries) CreateChat(ctx context.Context, arg CreateChatParams) (ChatHis
 	return i, err
 }
 
+const createUser = `-- name: CreateUser :one
+INSERT INTO users (
+  username, email, password_hash
+) VALUES (
+  $1, $2, $3
+) RETURNING id, username, email, password_hash
+`
+
+type CreateUserParams struct {
+	Username     string
+	Email        string
+	PasswordHash string
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, createUser, arg.Username, arg.Email, arg.PasswordHash)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.PasswordHash,
+	)
+	return i, err
+}
+
 const deleteBlog = `-- name: DeleteBlog :exec
 DELETE FROM blogs
 WHERE id = $1
@@ -79,6 +105,16 @@ WHERE id = $1
 
 func (q *Queries) DeleteChat(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteChat, id)
+	return err
+}
+
+const deleteUser = `-- name: DeleteUser :exec
+DELETE FROM users
+WHERE username = $1
+`
+
+func (q *Queries) DeleteUser(ctx context.Context, username string) error {
+	_, err := q.db.ExecContext(ctx, deleteUser, username)
 	return err
 }
 
@@ -182,6 +218,23 @@ func (q *Queries) GetChatHistory(ctx context.Context) ([]ChatHistory, error) {
 	return items, nil
 }
 
+const getUser = `-- name: GetUser :one
+SELECT id, username, email, password_hash FROM users
+WHERE username = $1 LIMIT 1
+`
+
+func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUser, username)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.PasswordHash,
+	)
+	return i, err
+}
+
 const updateBlog = `-- name: UpdateBlog :one
 UPDATE blogs
   set title = $2, content = $3
@@ -203,6 +256,37 @@ func (q *Queries) UpdateBlog(ctx context.Context, arg UpdateBlogParams) (Blog, e
 		&i.Title,
 		&i.Content,
 		&i.CreateDate,
+	)
+	return i, err
+}
+
+const updateUser = `-- name: UpdateUser :one
+UPDATE users
+  set username = $4, email = $2, password_hash = $3
+WHERE username = $1
+RETURNING id, username, email, password_hash
+`
+
+type UpdateUserParams struct {
+	Username     string
+	Email        string
+	PasswordHash string
+	Username_2   string
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, updateUser,
+		arg.Username,
+		arg.Email,
+		arg.PasswordHash,
+		arg.Username_2,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.PasswordHash,
 	)
 	return i, err
 }

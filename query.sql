@@ -41,3 +41,24 @@ INSERT INTO chat_history (
 -- name: DeleteChat :exec
 DELETE FROM chat_history
 WHERE id = $1;
+
+-- name: GetUser :one
+SELECT * FROM users
+WHERE username = $1 LIMIT 1;
+
+-- name: CreateUser :one
+INSERT INTO users (
+  username, email, password_hash
+) VALUES (
+  $1, $2, $3
+) RETURNING *;
+
+-- name: DeleteUser :exec
+DELETE FROM users
+WHERE username = $1;
+
+-- name: UpdateUser :one
+UPDATE users
+  set username = $4, email = $2, password_hash = $3
+WHERE username = $1
+RETURNING *;

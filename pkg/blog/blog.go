@@ -60,7 +60,7 @@ func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 			return
 		}
 
-		w.Write(httpm.MakeSuccessResponse[Post](w, http.StatusCreated, post))
+		w.Write(httpm.MakeSuccessResponse[dbquery.Blog](w, http.StatusCreated, post))
 	}
 }
 
@@ -130,7 +130,7 @@ func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 			return
 		}
 
-		w.Write(httpm.MakeSuccessResponse[Post](w, http.StatusOK, post))
+		w.Write(httpm.MakeSuccessResponse[dbquery.Blog](w, http.StatusOK, post))
 	}
 }
 
@@ -156,7 +156,7 @@ func GetPostByIdHandler(queries *dbquery.Queries, ctx context.Context) http.Hand
 			return
 		}
 
-		w.Write(httpm.MakeSuccessResponse[Post](w, http.StatusOK, post))
+		w.Write(httpm.MakeSuccessResponse[dbquery.Blog](w, http.StatusOK, post))
 	}
 }
 
@@ -168,6 +168,6 @@ func GetPostsHandler(queries *dbquery.Queries, ctx context.Context) http.Handler
 			return
 		}
 
-		w.Write(httpm.MakeSuccessResponse[Post](w, http.StatusOK, posts))
+		w.Write(httpm.MakeSuccessResponse[dbquery.Blog](w, http.StatusOK, posts))
 	}
 }
