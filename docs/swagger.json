@@ -1,7 +1,15 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This API is a self-made project made with golang, this repository can be accessed on: https://github.com/FreeJ1nG/freejing-be",
+        "title": "FreeJinG API",
+        "contact": {
+            "name": "Andrew Jeremy",
+            "email": "Andrewjeremy12345@gmail.com"
+        },
+        "version": "1.0"
     },
+    "host": "api.freejing.com",
+    "basePath": "/v1",
     "paths": {}
 }

@@ -1,4 +1,12 @@
+basePath: /v1
+host: api.freejing.com
 info:
-  contact: {}
+  contact:
+    email: Andrewjeremy12345@gmail.com
+    name: Andrew Jeremy
+  description: 'This API is a self-made project made with golang, this repository
+    can be accessed on: https://github.com/FreeJ1nG/freejing-be'
+  title: FreeJinG API
+  version: "1.0"
 paths: {}
 swagger: "2.0"

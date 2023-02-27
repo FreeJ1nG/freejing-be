@@ -9,7 +9,10 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "Andrew Jeremy",
+            "email": "Andrewjeremy12345@gmail.com"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -19,12 +22,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0",
+	Host:             "api.freejing.com",
+	BasePath:         "/v1",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "FreeJinG API",
+	Description:      "This API is a self-made project made with golang, this repository can be accessed on: https://github.com/FreeJ1nG/freejing-be",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
