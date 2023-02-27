@@ -5,8 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/FreeJ1nG.com/freejing-be/httpm"
+	"github.com/FreeJ1nG/freejing-be/dbquery"
 	"github.com/gorilla/mux"
 )
 
@@ -29,7 +32,7 @@ type Post struct {
 	Content    string `json:"content"`
 }
 
-func CreatePostHandler(ctx *context.Context) http.HandlerFunc {
+func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var requestBody RequestBody
 		err := json.NewDecoder(r.Body).Decode(&requestBody)
@@ -47,7 +50,11 @@ func CreatePostHandler(ctx *context.Context) http.HandlerFunc {
 			return
 		}
 
-		post, err := createPost(db, requestBody.Title, requestBody.Content)
+		post, err := queries.CreateBlog(ctx, dbquery.CreateBlogParams{
+			Title:      requestBody.Title,
+			Content:    requestBody.Content,
+			CreateDate: time.Now(),
+		})
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return
@@ -57,7 +64,7 @@ func CreatePostHandler(ctx *context.Context) http.HandlerFunc {
 	}
 }
 
-func DeletePostHandler(ctx *context.Context) http.HandlerFunc {
+func DeletePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
@@ -67,7 +74,13 @@ func DeletePostHandler(ctx *context.Context) http.HandlerFunc {
 			return
 		}
 
-		err := deletePostById(db, id)
+		id_int, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
+			return
+		}
+
+		err = queries.DeleteBlog(ctx, id_int)
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return
@@ -77,7 +90,7 @@ func DeletePostHandler(ctx *context.Context) http.HandlerFunc {
 	}
 }
 
-func UpdatePostHandler(ctx *context.Context) http.HandlerFunc {
+func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
@@ -103,7 +116,15 @@ func UpdatePostHandler(ctx *context.Context) http.HandlerFunc {
 			return
 		}
 
-		post, err := updatePost(db, id, requestBody.Title, requestBody.Content)
+		id_int, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
+			return
+		}
+
+		post, err := queries.UpdateBlog(ctx, dbquery.UpdateBlogParams{
+			ID: id_int, Title: requestBody.Title, Content: requestBody.Content,
+		})
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, err))
 			return
@@ -113,7 +134,7 @@ func UpdatePostHandler(ctx *context.Context) http.HandlerFunc {
 	}
 }
 
-func GetPostByIdHandler(ctx *context.Context) http.HandlerFunc {
+func GetPostByIdHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
@@ -123,7 +144,13 @@ func GetPostByIdHandler(ctx *context.Context) http.HandlerFunc {
 			return
 		}
 
-		post, err := getPostById(db, id)
+		id_int, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
+			return
+		}
+
+		post, err := queries.GetBlogById(ctx, id_int)
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return
@@ -133,9 +160,9 @@ func GetPostByIdHandler(ctx *context.Context) http.HandlerFunc {
 	}
 }
 
-func GetPostsHandler(ctx *context.Context) http.HandlerFunc {
+func GetPostsHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, _ *http.Request) {
-		posts, err := getAllPosts(db)
+		posts, err := queries.GetBlogs(ctx)
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
 			return

@@ -1,7 +1,6 @@
 package websocket
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
@@ -48,7 +47,7 @@ func Upgrade(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
 	return ws, nil
 }
 
-func WebsocketHandler(db *sql.DB, pool *Pool) http.HandlerFunc {
+func WebsocketHandler(pool *Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Websocket Endpoint Hit!")
 

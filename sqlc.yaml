@@ -5,5 +5,5 @@ sql:
     schema: "schema.sql"
     gen:
       go:
-        package: "queries"
-        out: "db"
+        package: "dbquery"
+        out: "dbquery"

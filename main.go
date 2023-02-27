@@ -9,6 +9,7 @@ import (
 
 	"github.com/FreeJ1nG.com/freejing-be/websocket"
 	"github.com/FreeJ1nG/freejing-be/blog"
+	"github.com/FreeJ1nG/freejing-be/dbquery"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -25,19 +26,20 @@ func logRequestFunc(f http.HandlerFunc, log string) http.HandlerFunc {
 func setupRoutes(db *sql.DB) {
 	ctx := context.Background()
 	pool := websocket.NewPool()
-	go pool.Start(db)
-
 	router := mux.NewRouter()
+	queries := dbquery.New(db)
+
+	go pool.Start(queries, ctx)
 
 	mainRouter := router.PathPrefix("/v1").Subrouter()
 
-	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(ctx), "POST /v1/blogs")).Methods("POST")
-	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(ctx), "GET /v1/blogs")).Methods("GET")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(ctx), "GET /v1/blogs/{id}")).Methods("GET")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.DeletePostHandler(ctx), "DELETE /v1/blogs/{id}")).Methods("DELETE")
-	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.UpdatePostHandler(ctx), "PATCH /v1/blogs/{id}")).Methods("PATCH")
+	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(queries, ctx), "POST /v1/blogs")).Methods("POST")
+	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(queries, ctx), "GET /v1/blogs")).Methods("GET")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(queries, ctx), "GET /v1/blogs/{id}")).Methods("GET")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.DeletePostHandler(queries, ctx), "DELETE /v1/blogs/{id}")).Methods("DELETE")
+	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.UpdatePostHandler(queries, ctx), "PATCH /v1/blogs/{id}")).Methods("PATCH")
 
-	mainRouter.HandleFunc("/ws", logRequestFunc(websocket.WebsocketHandler(ctx, pool), "WEBSOCKET /v1/ws"))
+	mainRouter.HandleFunc("/ws", logRequestFunc(websocket.WebsocketHandler(pool), "WEBSOCKET /v1/ws"))
 
 	server := &http.Server{
 		Addr:    ":7070",

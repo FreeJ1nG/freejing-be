@@ -1,8 +1,11 @@
 package websocket
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
+	"time"
+
+	"github.com/FreeJ1nG/freejing-be/dbquery"
 )
 
 type Pool struct {
@@ -21,7 +24,7 @@ func NewPool() *Pool {
 	}
 }
 
-func (pool *Pool) Start(db *sql.DB) {
+func (pool *Pool) Start(queries *dbquery.Queries, ctx context.Context) {
 	for {
 		select {
 		case originalClient := <-pool.Register:
@@ -31,7 +34,7 @@ func (pool *Pool) Start(db *sql.DB) {
 				fmt.Println(client)
 				client.Conn.WriteJSON(Message{SenderUsername: client.Username, Type: 1, Body: fmt.Sprintf("%v has joined the chat!", originalClient.Username)})
 			}
-			chatHistory, err := GetChatHistory(db)
+			chatHistory, err := queries.GetChatHistory(ctx)
 			if err != nil {
 				fmt.Printf("GetChatHistory: %v\n", err)
 				continue
@@ -48,13 +51,13 @@ func (pool *Pool) Start(db *sql.DB) {
 			}
 		case message := <-pool.Broadcast:
 			fmt.Println("Sending message to all clients in Pool")
-			chat, err := AddChatToHistory(db, message.SenderUsername, message.Body)
+			chat, err := queries.CreateChat(ctx, dbquery.CreateChatParams{Sender: message.SenderUsername, Message: message.Body, CreateDate: time.Now()})
 			if err != nil {
 				fmt.Printf("AddChatToHistory: %v\n", err)
 				continue
 			}
 			fmt.Printf("New Chat: %v\n", chat)
-			chatHistory, err := GetChatHistory(db)
+			chatHistory, err := queries.GetChatHistory(ctx)
 			if err != nil {
 				fmt.Printf("GetChatHistory: %v\n", err)
 				continue
