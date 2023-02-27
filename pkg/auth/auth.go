@@ -16,7 +16,7 @@ import (
 type NewUserRequestBody struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
-	Password string `json:"password_hash"`
+	Password string `json:"password"`
 }
 
 type User struct {
