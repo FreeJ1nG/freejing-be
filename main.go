@@ -68,7 +68,6 @@ func setupRoutes(db *sql.DB) {
 // @contact.email Andrewjeremy12345@gmail.com
 
 // @host api.freejing.com
-// @BasePath /v1
 
 func main() {
 	err := godotenv.Load(".env.local")

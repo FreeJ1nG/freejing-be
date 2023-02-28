@@ -18,7 +18,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/blogs": {
+        "/v1/blogs": {
             "post": {
                 "description": "Create new blog post",
                 "consumes": [
@@ -78,7 +78,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "api.freejing.com",
-	BasePath:         "/v1",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "FreeJinG API",
 	Description:      "This API is a self-made project made with golang, this repository can be accessed on: https://github.com/FreeJ1nG/freejing-be",

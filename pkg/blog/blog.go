@@ -25,22 +25,14 @@ type Response struct {
 	Error      string      `json:"errors,omitempty"`
 }
 
-type Post struct {
-	Id         string `json:"id"`
-	CreateDate string `json:"create_date"`
-	Title      string `json:"title"`
-	Content    string `json:"content"`
-}
-
 // CreatePost godoc
 // @Summary Create new blog post
-// @Description Create new blog post
 // @Tags blog
 // @Accept json
 // @Produce json
-// @Param post body Post true "Create Blog Post"
-// @Success 200 {object} Post
-// @Router /blogs [post]
+// @Param post body dbquery.Blog true "Create Blog Post"
+// @Success 200 {object} dbquery.Blog
+// @Router /v1/blogs [post]
 func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var requestBody RequestBody
@@ -73,6 +65,11 @@ func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 	}
 }
 
+// DeletePost godoc
+// @Description Delete blog post with a certain id
+// @Tags blog
+// @Success 204
+// @Router /v1/blogs/{id} [delete]
 func DeletePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -99,6 +96,14 @@ func DeletePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 	}
 }
 
+// UpdatePost godoc
+// @Summary Update blog post with a certain id
+// @Tags blog
+// @Accept json
+// @Produce json
+// @Param post body dbquery.Blog true "Update Blog Post"
+// @Success 200 {object} dbquery.Blog
+// @Router /v1/blogs/{id} [put]
 func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -143,6 +148,12 @@ func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 	}
 }
 
+// GetPostById godoc
+// @Summary Get blog post with a certain id
+// @Tags blog
+// @Produce json
+// @Success 200 {object} dbquery.Blog
+// @Router /v1/blogs/{id} [get]
 func GetPostByIdHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -169,6 +180,12 @@ func GetPostByIdHandler(queries *dbquery.Queries, ctx context.Context) http.Hand
 	}
 }
 
+// GetPosts godoc
+// @Summary Get blog posts
+// @Tags blog
+// @Produce json
+// @Success 200 {array} dbquery.Blog
+// @Router /v1/blogs [get]
 func GetPostsHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, _ *http.Request) {
 		posts, err := queries.GetBlogs(ctx)

@@ -1,4 +1,3 @@
-basePath: /v1
 definitions:
   blog.Post:
     properties:
@@ -21,7 +20,7 @@ info:
   title: FreeJinG API
   version: "1.0"
 paths:
-  /blogs:
+  /v1/blogs:
     post:
       consumes:
       - application/json
