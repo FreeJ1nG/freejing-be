@@ -9,22 +9,22 @@ import (
 )
 
 type Blog struct {
-	ID         int64
-	Title      string
-	Content    string
-	CreateDate time.Time
+	ID         int64 `json:"id"`
+	Title      string `json:"title"`
+	Content    string `json:"content"`
+	CreateDate time.Time `json:"create_date"`
 }
 
 type ChatHistory struct {
-	ID         int64
-	Sender     string
-	Message    string
-	CreateDate time.Time
+	ID         int64 `json:"id"`
+	Sender     string `json:"sender"`
+	Message    string `json:"message"`
+	CreateDate time.Time `json:"create_date"`
 }
 
 type User struct {
-	ID           int64
-	Username     string
-	Email        string
-	PasswordHash string
+	ID           int64 `json:"id"`
+	Username     string `json:"username"`
+	Email        string `json:"email"`
+	PasswordHash string `json:"passwordhash`
 }
