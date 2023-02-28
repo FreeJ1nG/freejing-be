@@ -32,6 +32,15 @@ type Post struct {
 	Content    string `json:"content"`
 }
 
+// CreatePost godoc
+// @Summary Create new blog post
+// @Description Create new blog post
+// @Tags blog
+// @Accept json
+// @Produce json
+// @Param post body Post true "Create Blog Post"
+// @Success 200 {object} Post
+// @Router /blogs [post]
 func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var requestBody RequestBody

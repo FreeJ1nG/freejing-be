@@ -1,4 +1,16 @@
 basePath: /v1
+definitions:
+  blog.Post:
+    properties:
+      content:
+        type: string
+      create_date:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+    type: object
 host: api.freejing.com
 info:
   contact:
@@ -8,5 +20,27 @@ info:
     can be accessed on: https://github.com/FreeJ1nG/freejing-be'
   title: FreeJinG API
   version: "1.0"
-paths: {}
+paths:
+  /blogs:
+    post:
+      consumes:
+      - application/json
+      description: Create new blog post
+      parameters:
+      - description: Create Blog Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/blog.Post'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/blog.Post'
+      summary: Create new blog post
+      tags:
+      - blog
 swagger: "2.0"

@@ -38,10 +38,6 @@ func setupRoutes(db *sql.DB) {
 
 	mainRouter.PathPrefix("/docs/").Handler(logRequestFunc(httpSwagger.WrapHandler))
 
-	// @Summary add new blog
-	// @ID post-new-blog
-	// @Produce json
-	// @Router /blogs [post]
 	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(queries, ctx))).Methods("POST")
 	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(queries, ctx))).Methods("GET")
 	mainRouter.HandleFunc("/blogs/{id}", logRequestFunc(blog.GetPostByIdHandler(queries, ctx))).Methods("GET")
