@@ -19,8 +19,27 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/v1/blogs": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blog"
+                ],
+                "summary": "Get blog posts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dbquery.Blog"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
-                "description": "Create new blog post",
                 "consumes": [
                     "application/json"
                 ],
@@ -38,7 +57,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/blog.Post"
+                            "$ref": "#/definitions/dbquery.Blog"
                         }
                     }
                 ],
@@ -46,15 +65,76 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/blog.Post"
+                            "$ref": "#/definitions/dbquery.Blog"
                         }
+                    }
+                }
+            }
+        },
+        "/v1/blogs/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blog"
+                ],
+                "summary": "Get blog post with a certain id",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dbquery.Blog"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blog"
+                ],
+                "summary": "Update blog post with a certain id",
+                "parameters": [
+                    {
+                        "description": "Update Blog Post",
+                        "name": "post",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dbquery.Blog"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dbquery.Blog"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete blog post with a certain id",
+                "tags": [
+                    "blog"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
         }
     },
     "definitions": {
-        "blog.Post": {
+        "dbquery.Blog": {
             "type": "object",
             "properties": {
                 "content": {
@@ -64,7 +144,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "title": {
                     "type": "string"

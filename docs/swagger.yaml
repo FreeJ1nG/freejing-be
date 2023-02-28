@@ -1,12 +1,12 @@
 definitions:
-  blog.Post:
+  dbquery.Blog:
     properties:
       content:
         type: string
       create_date:
         type: string
       id:
-        type: string
+        type: integer
       title:
         type: string
     type: object
@@ -21,25 +21,76 @@ info:
   version: "1.0"
 paths:
   /v1/blogs:
-    post:
-      consumes:
-      - application/json
-      description: Create new blog post
-      parameters:
-      - description: Create Blog Post
-        in: body
-        name: post
-        required: true
-        schema:
-          $ref: '#/definitions/blog.Post'
+    get:
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/blog.Post'
+            items:
+              $ref: '#/definitions/dbquery.Blog'
+            type: array
+      summary: Get blog posts
+      tags:
+      - blog
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create Blog Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/dbquery.Blog'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dbquery.Blog'
       summary: Create new blog post
+      tags:
+      - blog
+  /v1/blogs/{id}:
+    delete:
+      description: Delete blog post with a certain id
+      responses:
+        "204":
+          description: No Content
+      tags:
+      - blog
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dbquery.Blog'
+      summary: Get blog post with a certain id
+      tags:
+      - blog
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update Blog Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/dbquery.Blog'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dbquery.Blog'
+      summary: Update blog post with a certain id
       tags:
       - blog
 swagger: "2.0"
