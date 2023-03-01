@@ -18,13 +18,6 @@ type RequestBody struct {
 	Content string `json:"content"`
 }
 
-type Response struct {
-	Data       interface{} `json:"data,omitempty"`
-	StatusCode int         `json:"statusCode"`
-	Success    bool        `json:"success"`
-	Error      string      `json:"errors,omitempty"`
-}
-
 // CreatePost godoc
 // @Summary Create new blog post
 // @Tags blog
@@ -66,7 +59,7 @@ func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 }
 
 // DeletePost godoc
-// @Description Delete blog post with a certain id
+// @Summary Delete blog post with a certain id
 // @Tags blog
 // @Success 204
 // @Router /v1/blogs/{id} [delete]
@@ -152,7 +145,7 @@ func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 // @Summary Get blog post with a certain id
 // @Tags blog
 // @Produce json
-// @Success 200 {object} dbquery.Blog
+// @Success 200 {object} httpm.Response{data=dbquery.Blog}
 // @Router /v1/blogs/{id} [get]
 func GetPostByIdHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
