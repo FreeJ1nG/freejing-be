@@ -36,7 +36,7 @@ func setupRoutes(db *sql.DB) {
 
 	mainRouter := router.PathPrefix("/v1").Subrouter()
 
-	mainRouter.PathPrefix("/docs/").Handler(logRequestFunc(httpSwagger.WrapHandler))
+	mainRouter.PathPrefix("/docs").Handler(logRequestFunc(httpSwagger.WrapHandler))
 
 	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.CreatePostHandler(queries, ctx))).Methods("POST")
 	mainRouter.HandleFunc("/blogs", logRequestFunc(blog.GetPostsHandler(queries, ctx))).Methods("GET")
