@@ -13,7 +13,7 @@ definitions:
   httpm.Response:
     properties:
       data: {}
-      errors:
+      error:
         type: string
       statusCode:
         type: integer

@@ -9,7 +9,7 @@ type Response struct {
 	Data       interface{} `json:"data,omitempty"`
 	StatusCode int         `json:"statusCode"`
 	Success    bool        `json:"success"`
-	Error      string      `json:"errors,omitempty"`
+	Error      string      `json:"error,omitempty"`
 }
 
 func MakeErrorResponse(w http.ResponseWriter, httpStatus int, err error) []byte {

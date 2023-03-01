@@ -206,7 +206,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "data": {},
-                "errors": {
+                "error": {
                     "type": "string"
                 },
                 "statusCode": {
