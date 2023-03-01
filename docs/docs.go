@@ -43,7 +43,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "desc",
+                        "description": "User has been created",
                         "schema": {
                             "allOf": [
                                 {
@@ -88,7 +88,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "desc",
+                        "description": "User has been updated",
                         "schema": {
                             "allOf": [
                                 {
@@ -114,7 +114,7 @@ const docTemplate = `{
                 "summary": "Delete user with a certain username",
                 "responses": {
                     "204": {
-                        "description": "No Content"
+                        "description": "User has been deleted"
                     }
                 }
             }
@@ -130,7 +130,7 @@ const docTemplate = `{
                 "summary": "Get blog posts",
                 "responses": {
                     "200": {
-                        "description": "desc",
+                        "description": "Blogs retrieved",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -179,7 +179,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "desc",
+                        "description": "Blog has been created",
                         "schema": {
                             "allOf": [
                                 {
@@ -210,7 +210,7 @@ const docTemplate = `{
                 "summary": "Get blog post with a certain id",
                 "responses": {
                     "200": {
-                        "description": "desc",
+                        "description": "Blog has been found",
                         "schema": {
                             "allOf": [
                                 {
@@ -253,7 +253,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "desc",
+                        "description": "Blog has been updated",
                         "schema": {
                             "allOf": [
                                 {
@@ -279,7 +279,7 @@ const docTemplate = `{
                 "summary": "Delete blog post with a certain id",
                 "responses": {
                     "204": {
-                        "description": "No Content"
+                        "description": "Blog has been deleted"
                     }
                 }
             }
@@ -295,7 +295,7 @@ const docTemplate = `{
                 "summary": "Get user with a certain username",
                 "responses": {
                     "200": {
-                        "description": "desc",
+                        "description": "User has been found",
                         "schema": {
                             "allOf": [
                                 {

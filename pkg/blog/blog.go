@@ -24,7 +24,7 @@ type newBlogRequestBody struct {
 // @Accept json
 // @Produce json
 // @Param post body newBlogRequestBody true "Create Blog Post"
-// @Success 201 {object} httpm.Response{data=dbquery.Blog} "desc"
+// @Success 201 {object} httpm.Response{data=dbquery.Blog} "Blog has been created"
 // @Router /v1/blogs [post]
 func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +61,7 @@ func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 // DeletePost godoc
 // @Summary Delete blog post with a certain id
 // @Tags blog
-// @Success 204
+// @Success 204 "Blog has been deleted"
 // @Router /v1/blogs/{id} [delete]
 func DeletePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -95,7 +95,7 @@ func DeletePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 // @Accept json
 // @Produce json
 // @Param post body newBlogRequestBody true "Update Blog Post"
-// @Success 200 {object} httpm.Response{data=dbquery.Blog} "desc"
+// @Success 200 {object} httpm.Response{data=dbquery.Blog} "Blog has been updated"
 // @Router /v1/blogs/{id} [put]
 func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -145,7 +145,7 @@ func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 // @Summary Get blog post with a certain id
 // @Tags blog
 // @Produce json
-// @Success 200 {object} httpm.Response{data=dbquery.Blog} "desc"
+// @Success 200 {object} httpm.Response{data=dbquery.Blog} "Blog has been found"
 // @Router /v1/blogs/{id} [get]
 func GetPostByIdHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -177,7 +177,7 @@ func GetPostByIdHandler(queries *dbquery.Queries, ctx context.Context) http.Hand
 // @Summary Get blog posts
 // @Tags blog
 // @Produce json
-// @Success 200 {array} httpm.Response{data=[]dbquery.Blog} "desc"
+// @Success 200 {array} httpm.Response{data=[]dbquery.Blog} "Blogs retrieved"
 // @Router /v1/blogs [get]
 func GetPostsHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, _ *http.Request) {
