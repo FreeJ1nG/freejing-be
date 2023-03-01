@@ -8,6 +8,13 @@ definitions:
       username:
         type: string
     type: object
+  blog.newBlogRequestBody:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
   dbquery.Blog:
     properties:
       content:
@@ -139,7 +146,7 @@ paths:
         name: post
         required: true
         schema:
-          $ref: '#/definitions/dbquery.Blog'
+          $ref: '#/definitions/blog.newBlogRequestBody'
       produces:
       - application/json
       responses:
@@ -188,7 +195,7 @@ paths:
         name: post
         required: true
         schema:
-          $ref: '#/definitions/dbquery.Blog'
+          $ref: '#/definitions/blog.newBlogRequestBody'
       produces:
       - application/json
       responses:

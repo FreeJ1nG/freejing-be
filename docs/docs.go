@@ -173,7 +173,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dbquery.Blog"
+                            "$ref": "#/definitions/blog.newBlogRequestBody"
                         }
                     }
                 ],
@@ -247,7 +247,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dbquery.Blog"
+                            "$ref": "#/definitions/blog.newBlogRequestBody"
                         }
                     }
                 ],
@@ -327,6 +327,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "blog.newBlogRequestBody": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }

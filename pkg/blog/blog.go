@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type RequestBody struct {
+type newBlogRequestBody struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 }
@@ -23,12 +23,12 @@ type RequestBody struct {
 // @Tags blog
 // @Accept json
 // @Produce json
-// @Param post body dbquery.Blog true "Create Blog Post"
+// @Param post body newBlogRequestBody true "Create Blog Post"
 // @Success 201 {object} httpm.Response{data=dbquery.Blog} "desc"
 // @Router /v1/blogs [post]
 func CreatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var requestBody RequestBody
+		var requestBody newBlogRequestBody
 		err := json.NewDecoder(r.Body).Decode(&requestBody)
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
@@ -94,7 +94,7 @@ func DeletePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 // @Tags blog
 // @Accept json
 // @Produce json
-// @Param post body dbquery.Blog true "Update Blog Post"
+// @Param post body newBlogRequestBody true "Update Blog Post"
 // @Success 200 {object} httpm.Response{data=dbquery.Blog} "desc"
 // @Router /v1/blogs/{id} [put]
 func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
@@ -107,7 +107,7 @@ func UpdatePostHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 			return
 		}
 
-		var requestBody RequestBody
+		var requestBody newBlogRequestBody
 		err := json.NewDecoder(r.Body).Decode(&requestBody)
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusBadRequest, err))

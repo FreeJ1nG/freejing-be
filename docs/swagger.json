@@ -166,7 +166,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dbquery.Blog"
+                            "$ref": "#/definitions/blog.newBlogRequestBody"
                         }
                     }
                 ],
@@ -240,7 +240,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dbquery.Blog"
+                            "$ref": "#/definitions/blog.newBlogRequestBody"
                         }
                     }
                 ],
@@ -320,6 +320,17 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "blog.newBlogRequestBody": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }
