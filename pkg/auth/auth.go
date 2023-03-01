@@ -48,6 +48,14 @@ func (u *User) ValidatePasswordHash(password string) (bool, error) {
 	return true, nil
 }
 
+// Createuser godoc
+// @Summary Create new user
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param user body dbquery.User true "Create new user"
+// @Success 201 {object} httpm.Response{data=dbquery.User}
+// @Router /v1/auth [post]
 func CreateUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var requestBody NewUserRequestBody
@@ -89,6 +97,12 @@ func CreateUserHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 	}
 }
 
+// GetUserByUsername godoc
+// @Summary Get user with a certain username
+// @Tags user
+// @Produce json
+// @Success 200 {object} httpm.Response{data=dbquery.User}
+// @Router /v1/user/{username} [get]
 func GetUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -109,6 +123,11 @@ func GetUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerF
 	}
 }
 
+// DeletePost godoc
+// @Summary Delete user with a certain username
+// @Tags user
+// @Success 204
+// @Router /v1/auth/{username} [delete]
 func DeleteUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -129,6 +148,14 @@ func DeleteUserHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 	}
 }
 
+// UpdateUser godoc
+// @Summary Update user with a certain username
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param user body dbquery.User true "Update user with a certain username"
+// @Success 200 {object} httpm.Response{data=dbquery.User}
+// @Router /v1/auth/{username} [put]
 func UpdateUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var requestBody NewUserRequestBody

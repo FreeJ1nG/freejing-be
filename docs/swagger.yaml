@@ -10,6 +10,17 @@ definitions:
       title:
         type: string
     type: object
+  dbquery.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      passwordHash:
+        type: string
+      username:
+        type: string
+    type: object
   httpm.Response:
     properties:
       data: {}
@@ -30,6 +41,65 @@ info:
   title: FreeJinG API
   version: "1.0"
 paths:
+  /v1/auth:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create new user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dbquery.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/httpm.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbquery.User'
+              type: object
+      summary: Create new user
+      tags:
+      - user
+  /v1/auth/{username}:
+    delete:
+      responses:
+        "204":
+          description: No Content
+      summary: Delete user with a certain username
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update user with a certain username
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dbquery.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/httpm.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbquery.User'
+              type: object
+      summary: Update user with a certain username
+      tags:
+      - user
   /v1/blogs:
     get:
       produces:
@@ -125,4 +195,21 @@ paths:
       summary: Update blog post with a certain id
       tags:
       - blog
+  /v1/user/{username}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/httpm.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbquery.User'
+              type: object
+      summary: Get user with a certain username
+      tags:
+      - user
 swagger: "2.0"
