@@ -43,7 +43,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "desc",
                         "schema": {
                             "allOf": [
                                 {
@@ -88,7 +88,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "desc",
                         "schema": {
                             "allOf": [
                                 {
@@ -130,7 +130,7 @@ const docTemplate = `{
                 "summary": "Get blog posts",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "desc",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -179,7 +179,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "desc",
                         "schema": {
                             "allOf": [
                                 {
@@ -210,7 +210,7 @@ const docTemplate = `{
                 "summary": "Get blog post with a certain id",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "desc",
                         "schema": {
                             "allOf": [
                                 {
@@ -253,7 +253,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "desc",
                         "schema": {
                             "allOf": [
                                 {
@@ -295,7 +295,7 @@ const docTemplate = `{
                 "summary": "Get user with a certain username",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "desc",
                         "schema": {
                             "allOf": [
                                 {
@@ -358,7 +358,7 @@ const docTemplate = `{
                 "error": {
                     "type": "string"
                 },
-                "statusCode": {
+                "status_code": {
                     "type": "integer"
                 },
                 "success": {

@@ -54,7 +54,7 @@ func (u *User) ValidatePasswordHash(password string) (bool, error) {
 // @Accept json
 // @Produce json
 // @Param user body dbquery.User true "Create new user"
-// @Success 201 {object} httpm.Response{data=dbquery.User}
+// @Success 201 {object} httpm.Response{data=dbquery.User} "desc"
 // @Router /v1/auth [post]
 func CreateUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -101,7 +101,7 @@ func CreateUserHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 // @Summary Get user with a certain username
 // @Tags user
 // @Produce json
-// @Success 200 {object} httpm.Response{data=dbquery.User}
+// @Success 200 {object} httpm.Response{data=dbquery.User} "desc"
 // @Router /v1/user/{username} [get]
 func GetUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -154,7 +154,7 @@ func DeleteUserHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 // @Accept json
 // @Produce json
 // @Param user body dbquery.User true "Update user with a certain username"
-// @Success 200 {object} httpm.Response{data=dbquery.User}
+// @Success 200 {object} httpm.Response{data=dbquery.User} "desc"
 // @Router /v1/auth/{username} [put]
 func UpdateUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

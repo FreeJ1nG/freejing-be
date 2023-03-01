@@ -26,7 +26,7 @@ definitions:
       data: {}
       error:
         type: string
-      statusCode:
+      status_code:
         type: integer
       success:
         type: boolean
@@ -56,7 +56,7 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: desc
           schema:
             allOf:
             - $ref: '#/definitions/httpm.Response'
@@ -89,7 +89,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: desc
           schema:
             allOf:
             - $ref: '#/definitions/httpm.Response'
@@ -106,7 +106,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: desc
           schema:
             items:
               allOf:
@@ -135,7 +135,7 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: desc
           schema:
             allOf:
             - $ref: '#/definitions/httpm.Response'
@@ -159,7 +159,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: desc
           schema:
             allOf:
             - $ref: '#/definitions/httpm.Response'
@@ -184,7 +184,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: desc
           schema:
             allOf:
             - $ref: '#/definitions/httpm.Response'
@@ -201,7 +201,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: desc
           schema:
             allOf:
             - $ref: '#/definitions/httpm.Response'
