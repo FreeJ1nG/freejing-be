@@ -39,7 +39,14 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dbquery.Blog'
+              allOf:
+              - $ref: '#/definitions/httpm.Response'
+              - properties:
+                  data:
+                    items:
+                      $ref: '#/definitions/dbquery.Blog'
+                    type: array
+                type: object
             type: array
       summary: Get blog posts
       tags:
@@ -57,10 +64,15 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
-            $ref: '#/definitions/dbquery.Blog'
+            allOf:
+            - $ref: '#/definitions/httpm.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbquery.Blog'
+              type: object
       summary: Create new blog post
       tags:
       - blog
@@ -104,7 +116,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dbquery.Blog'
+            allOf:
+            - $ref: '#/definitions/httpm.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbquery.Blog'
+              type: object
       summary: Update blog post with a certain id
       tags:
       - blog

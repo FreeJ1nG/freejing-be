@@ -33,7 +33,22 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dbquery.Blog"
+                                "allOf": [
+                                    {
+                                        "$ref": "#/definitions/httpm.Response"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "data": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/definitions/dbquery.Blog"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
                             }
                         }
                     }
@@ -62,10 +77,22 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dbquery.Blog"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/httpm.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dbquery.Blog"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -127,7 +154,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dbquery.Blog"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/httpm.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dbquery.Blog"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
