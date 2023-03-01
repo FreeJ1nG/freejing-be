@@ -10,6 +10,16 @@ definitions:
       title:
         type: string
     type: object
+  httpm.Response:
+    properties:
+      data: {}
+      errors:
+        type: string
+      statusCode:
+        type: integer
+      success:
+        type: boolean
+    type: object
 host: api.freejing.com
 info:
   contact:
@@ -56,10 +66,10 @@ paths:
       - blog
   /v1/blogs/{id}:
     delete:
-      description: Delete blog post with a certain id
       responses:
         "204":
           description: No Content
+      summary: Delete blog post with a certain id
       tags:
       - blog
     get:
@@ -69,7 +79,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dbquery.Blog'
+            allOf:
+            - $ref: '#/definitions/httpm.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbquery.Blog'
+              type: object
       summary: Get blog post with a certain id
       tags:
       - blog

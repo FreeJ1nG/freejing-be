@@ -84,7 +84,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dbquery.Blog"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/httpm.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dbquery.Blog"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -121,10 +133,10 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete blog post with a certain id",
                 "tags": [
                     "blog"
                 ],
+                "summary": "Delete blog post with a certain id",
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -148,6 +160,21 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "httpm.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "errors": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "type": "integer"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         }

@@ -5,16 +5,16 @@ import (
 	"net/http"
 )
 
-type Response[T interface{}] struct {
-	Data       T      `json:"data,omitempty"`
-	StatusCode int    `json:"statusCode"`
-	Success    bool   `json:"success"`
-	Error      string `json:"errors,omitempty"`
+type Response struct {
+	Data       interface{} `json:"data,omitempty"`
+	StatusCode int         `json:"statusCode"`
+	Success    bool        `json:"success"`
+	Error      string      `json:"errors,omitempty"`
 }
 
 func MakeErrorResponse(w http.ResponseWriter, httpStatus int, err error) []byte {
 	w.WriteHeader(httpStatus)
-	response := Response[interface{}]{Data: nil, StatusCode: httpStatus, Success: false, Error: err.Error()}
+	response := Response{Data: nil, StatusCode: httpStatus, Success: false, Error: err.Error()}
 
 	json, _ := json.Marshal(response)
 
@@ -25,22 +25,22 @@ func MakeSuccessResponse[T interface{}](w http.ResponseWriter, httpStatus int, d
 	var response interface{}
 	if data == nil {
 		w.WriteHeader(httpStatus)
-		response = Response[T]{StatusCode: httpStatus, Success: true}
+		response = Response{StatusCode: httpStatus, Success: true}
 	} else {
 		switch v := data.(type) {
 		case T:
 			w.WriteHeader(httpStatus)
-			response = Response[T]{Data: v, StatusCode: httpStatus, Success: true}
+			response = Response{Data: v, StatusCode: httpStatus, Success: true}
 		case []T:
 			w.WriteHeader(httpStatus)
 			if len(v) == 0 {
-				response = Response[[]T]{Data: []T{}, StatusCode: httpStatus, Success: true}
+				response = Response{Data: []T{}, StatusCode: httpStatus, Success: true}
 			} else {
-				response = Response[[]T]{Data: v, StatusCode: httpStatus, Success: true}
+				response = Response{Data: v, StatusCode: httpStatus, Success: true}
 			}
 		default:
 			w.WriteHeader(http.StatusInternalServerError)
-			response = Response[T]{StatusCode: http.StatusInternalServerError, Success: false, Error: "invalid data type"}
+			response = Response{StatusCode: http.StatusInternalServerError, Success: false, Error: "invalid data type"}
 		}
 	}
 
