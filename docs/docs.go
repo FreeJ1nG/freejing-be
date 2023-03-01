@@ -37,7 +37,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dbquery.User"
+                            "$ref": "#/definitions/auth.newUserRequestBody"
                         }
                     }
                 ],
@@ -82,7 +82,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dbquery.User"
+                            "$ref": "#/definitions/auth.newUserRequestBody"
                         }
                     }
                 ],
@@ -317,6 +317,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "auth.newUserRequestBody": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "dbquery.Blog": {
             "type": "object",
             "properties": {

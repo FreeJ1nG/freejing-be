@@ -1,4 +1,13 @@
 definitions:
+  auth.newUserRequestBody:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   dbquery.Blog:
     properties:
       content:
@@ -51,7 +60,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dbquery.User'
+          $ref: '#/definitions/auth.newUserRequestBody'
       produces:
       - application/json
       responses:
@@ -84,7 +93,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dbquery.User'
+          $ref: '#/definitions/auth.newUserRequestBody'
       produces:
       - application/json
       responses:

@@ -13,7 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type NewUserRequestBody struct {
+type newUserRequestBody struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -53,12 +53,12 @@ func (u *User) ValidatePasswordHash(password string) (bool, error) {
 // @Tags user
 // @Accept json
 // @Produce json
-// @Param user body dbquery.User true "Create new user"
+// @Param user body newUserRequestBody true "Create new user"
 // @Success 201 {object} httpm.Response{data=dbquery.User} "desc"
 // @Router /v1/auth [post]
 func CreateUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var requestBody NewUserRequestBody
+		var requestBody newUserRequestBody
 		err := json.NewDecoder(r.Body).Decode(&requestBody)
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
@@ -153,12 +153,12 @@ func DeleteUserHandler(queries *dbquery.Queries, ctx context.Context) http.Handl
 // @Tags user
 // @Accept json
 // @Produce json
-// @Param user body dbquery.User true "Update user with a certain username"
+// @Param user body newUserRequestBody true "Update user with a certain username"
 // @Success 200 {object} httpm.Response{data=dbquery.User} "desc"
 // @Router /v1/auth/{username} [put]
 func UpdateUserHandler(queries *dbquery.Queries, ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var requestBody NewUserRequestBody
+		var requestBody newUserRequestBody
 		err := json.NewDecoder(r.Body).Decode(&requestBody)
 		if err != nil {
 			w.Write(httpm.MakeErrorResponse(w, http.StatusInternalServerError, err))
